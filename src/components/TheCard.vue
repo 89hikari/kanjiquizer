@@ -11,7 +11,7 @@ const store = useAppStore();
         v-bind="props"
         :elevation="isHovering ? 24 : 6"
         class="mx-auto pa-6 rounded kanji mt-12 cursor-pointer"
-        :max-width="300"
+        :max-width="245"
         @click="store.setSelected()"
       >
         {{ store.currentKanji.kanji }}
@@ -24,6 +24,6 @@ const store = useAppStore();
 <style scoped>
 .kanji {
   text-align: center;
-  font-size: 165px;
+  font-size: 130px;
 }
 </style>

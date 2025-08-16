@@ -5,8 +5,8 @@ const store = useAppStore();
 </script>
 
 <template>
-  <div class="w-100 d-flex mt-10">
-    <div class="ml-auto text-h4 font-weight-bold d-flex align-center">
+  <div class="w-100 d-flex mt-8">
+    <div class="ml-auto text-h5 font-weight-bold d-flex align-center">
       <p>{{ store.scoreValue }}%</p>
       <v-icon class="cursor-pointer" @click="store.clear()"
         >mdi-close-octagon-outline</v-icon
