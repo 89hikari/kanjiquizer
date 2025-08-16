@@ -1,0 +1,16 @@
+<script setup lang="ts">
+import { useAppStore } from "../../store/app.store";
+
+const store = useAppStore();
+</script>
+
+<template>
+  <div class="ml-auto text-h5 font-weight-bold d-flex align-center">
+    <p>{{ store.scoreValue }}%</p>
+    <v-icon class="cursor-pointer" @click="store.clear()"
+      >mdi-close-octagon-outline</v-icon
+    >
+  </div>
+</template>
+
+<style scoped></style>

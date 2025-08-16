@@ -5,13 +5,29 @@ import { GRADES_LIST, KANJI_LIST } from "../common/const/index";
 import type { IKanji } from "../common/types";
 
 const initialState = {
-  levels: Array.from({ length: 5 }, (_, i) => i + 1),
-  selectedLevels: useLocalStorage("selected-levels", [] as number[]),
   kanjiList: KANJI_LIST,
   score: useLocalStorage("score", [] as number[]),
   currentKanji: {} as unknown as IKanji,
   gradesList: GRADES_LIST,
   isSelected: false,
+  menu: {
+    opened: false,
+    levels: Array.from({ length: 5 }, (_, i) => i + 1),
+    selectedLevels: useLocalStorage("selected-levels", [] as number[]),
+    lang: {
+      selected: useLocalStorage("language", "ru"),
+      list: [
+        {
+          title: "Русский",
+          value: "ru",
+        },
+        {
+          title: "English",
+          value: "en",
+        },
+      ],
+    },
+  },
 };
 
 export const useAppStore = defineStore("app", {
@@ -19,17 +35,6 @@ export const useAppStore = defineStore("app", {
     ...initialState,
   }),
   actions: {
-    setLevel(level: number) {
-      if (!this.selectedLevels.find((el) => el === level)) {
-        this.selectedLevels.push(level);
-      } else {
-        this.selectedLevels.splice(
-          this.selectedLevels.findIndex((el) => el === level),
-          1
-        );
-      }
-      this.setKanji();
-    },
     setScore(value: number) {
       this.score.push(value);
       this.setUnselected();
@@ -58,18 +63,20 @@ export const useAppStore = defineStore("app", {
     },
     clear() {
       this.score = [];
-    }
+    },
   },
   getters: {
     filteredCardsByLevel(store) {
       return store.kanjiList.filter((el) =>
-        store.selectedLevels.find((lev) => lev === +el.level)
+        store.menu.selectedLevels.find((lev) => lev === +el.level)
       );
     },
     scoreValue(store) {
-      return (Math.ceil(
-        store.score.reduce((a, b) => a + b, 0) / store.score.length
-      ) || 0);
+      return (
+        Math.ceil(
+          store.score.reduce((a, b) => a + b, 0) / store.score.length
+        ) || 0
+      );
     },
   },
 });
