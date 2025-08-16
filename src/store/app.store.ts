@@ -7,7 +7,8 @@ import type { IKanji } from "../common/types";
 const initialState = {
   kanjiList: KANJI_LIST,
   score: useLocalStorage("score", [] as number[]),
-  currentKanji: {} as unknown as IKanji,
+  indexList: [] as number[],
+  currentIndex: 0,
   gradesList: GRADES_LIST,
   isSelected: false,
   menu: {
@@ -30,6 +31,10 @@ const initialState = {
   },
 };
 
+initialState.indexList = [...Array(initialState.kanjiList.length).keys()].sort(
+  () => 0.5 - Math.random()
+);
+
 export const useAppStore = defineStore("app", {
   state: () => ({
     ...initialState,
@@ -38,22 +43,10 @@ export const useAppStore = defineStore("app", {
     setScore(value: number) {
       this.score.push(value);
       this.setUnselected();
-      this.setKanji();
+      this.setNewIndex();
     },
-    setKanji() {
-      const newKanjiIndex = Math.floor(
-        Math.random() * this.filteredCardsByLevel.length
-      );
-
-      if (
-        this.filteredCardsByLevel[newKanjiIndex]?.kanji ===
-        this.currentKanji?.kanji
-      ) {
-        this.currentKanji = this.filteredCardsByLevel[newKanjiIndex + 1];
-        return;
-      }
-      this.currentKanji = this.currentKanji =
-        this.filteredCardsByLevel[newKanjiIndex];
+    setNewIndex() {
+      this.currentIndex++;
     },
     setSelected() {
       this.isSelected = true;
@@ -66,17 +59,23 @@ export const useAppStore = defineStore("app", {
     },
   },
   getters: {
-    filteredCardsByLevel(store) {
-      return store.kanjiList.filter((el) =>
-        store.menu.selectedLevels.find((lev) => lev === +el.level)
+    filteredIndexes(): number[] {
+      return this.indexList.filter((el) =>
+        this.menu.selectedLevels.find(
+          (lev) => lev === +this.kanjiList[el].level
+        )
       );
     },
-    scoreValue(store) {
+    scoreValue(): number {
       return (
-        Math.ceil(
-          store.score.reduce((a, b) => a + b, 0) / store.score.length
-        ) || 0
+        Math.ceil(this.score.reduce((a, b) => a + b, 0) / this.score.length) ||
+        0
       );
+    },
+    kanji(): IKanji | undefined {
+      const kanjiIndex = this.filteredIndexes.at(this.currentIndex);
+      if (kanjiIndex) return this.kanjiList.at(kanjiIndex);
+      return kanjiIndex as undefined;
     },
   },
 });

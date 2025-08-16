@@ -6,7 +6,7 @@ const store = useAppStore();
 
 <template>
   <div class="mt-12">
-    <v-hover v-if="store.currentKanji" v-slot="{ isHovering, props }">
+    <v-hover v-if="store.kanji" v-slot="{ isHovering, props }">
       <v-card
         v-bind="props"
         :elevation="isHovering ? 24 : 6"
@@ -14,7 +14,7 @@ const store = useAppStore();
         :max-width="245"
         @click="store.setSelected()"
       >
-        {{ store.currentKanji.kanji }}
+        {{ store.kanji.kanji }}
       </v-card>
     </v-hover>
     <h1 v-else class="text-center">Select levels from above</h1>

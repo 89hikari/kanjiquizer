@@ -5,7 +5,6 @@ import TheMeaning from "../../components/page/TheMeaning.vue";
 import { useAppStore } from "../../store/app.store";
 
 const store = useAppStore();
-store.setKanji();
 </script>
 
 <template>
