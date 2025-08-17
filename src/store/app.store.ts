@@ -13,7 +13,12 @@ export const useAppStore = defineStore("app", {
   }),
   actions: {
     setScore(value: number) {
-      this.setKanjiProgress(this.kanji?.kanji || "", value);
+      const curKanji = this.kanji?.kanji || "";
+      const kanjiFromSet = this.progress.get(curKanji);
+      this.progress.set(curKanji, {
+        count: (kanjiFromSet?.count || 0) + 1,
+        result: [...(kanjiFromSet?.result || []), value],
+      });
       this.setUnselected();
       this.setNewIndex();
     },
@@ -29,13 +34,6 @@ export const useAppStore = defineStore("app", {
     clear() {
       this.progress.clear();
     },
-    setKanjiProgress(incomingKanji: string, result: number) {
-      const kanjiFromSet = this.progress.get(incomingKanji);
-      this.progress.set(incomingKanji, {
-        count: (kanjiFromSet?.count || 0) + 1,
-        result: [...(kanjiFromSet?.result || []), result],
-      });
-    },
   },
   getters: {
     filteredIndexes(): number[] {
@@ -47,7 +45,7 @@ export const useAppStore = defineStore("app", {
     },
     kanji(): IKanji | undefined {
       if (
-        this.currentIndex % getRandomArbitrary(1, 8) === 0 &&
+        this.currentIndex % getRandomArbitrary(3, 10) === 0 &&
         this.mostProblematicKanji
       ) {
         return this.mostProblematicKanji;
@@ -76,7 +74,7 @@ export const useAppStore = defineStore("app", {
         });
       kanjiList.sort((a, b) => a.progressResult - b.progressResult);
       const foundKanji = kanjiList.at(0);
-      if ((foundKanji?.progressResult || 0) <= 75) {
+      if ((foundKanji?.progressResult || 0) < 75) {
         return foundKanji;
       }
     },
