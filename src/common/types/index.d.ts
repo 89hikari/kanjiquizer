@@ -6,3 +6,8 @@ export interface IKanji {
   strokes: string;
   level: string;
 }
+
+export type KanjiProgress = {
+  count: number;
+  result: number[];
+};

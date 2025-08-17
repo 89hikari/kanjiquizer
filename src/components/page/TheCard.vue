@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useAppStore } from "../../store/app.store";
 
 const store = useAppStore();
+
+const classNames = computed(() => ({
+  "mx-auto pa-6 rounded kanji mt-12 cursor-pointer border-lg border-opacity-100":
+    true,
+  [`border-${store.kanjiProgressColor}`]: true,
+}));
 </script>
 
 <template>
@@ -10,7 +17,7 @@ const store = useAppStore();
       <v-card
         v-bind="props"
         :elevation="isHovering ? 24 : 6"
-        class="mx-auto pa-6 rounded kanji mt-12 cursor-pointer"
+        :class="classNames"
         :max-width="245"
         @click="store.setSelected()"
       >

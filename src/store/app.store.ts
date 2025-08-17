@@ -1,47 +1,16 @@
-import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
+import { getInitialStore } from "../common/helpers/store.helper";
 
-import { GRADES_LIST, KANJI_LIST } from "../common/const/index";
+import { getRandomArbitrary } from "../common/helpers/random.helper";
 import type { IKanji } from "../common/types";
-
-const initialState = {
-  kanjiList: KANJI_LIST,
-  score: useLocalStorage("score", [] as number[]),
-  indexList: [] as number[],
-  currentIndex: 0,
-  gradesList: GRADES_LIST,
-  isSelected: false,
-  menu: {
-    opened: false,
-    levels: Array.from({ length: 5 }, (_, i) => i + 1),
-    selectedLevels: useLocalStorage("selected-levels", [] as number[]),
-    lang: {
-      selected: useLocalStorage("language", "ru"),
-      list: [
-        {
-          title: "Русский",
-          value: "ru",
-        },
-        {
-          title: "English",
-          value: "en",
-        },
-      ],
-    },
-  },
-};
-
-initialState.indexList = [...Array(initialState.kanjiList.length).keys()].sort(
-  () => 0.5 - Math.random()
-);
 
 export const useAppStore = defineStore("app", {
   state: () => ({
-    ...initialState,
+    ...getInitialStore(),
   }),
   actions: {
     setScore(value: number) {
-      this.score.push(value);
+      this.setKanjiProgress(this.kanji?.kanji || "", value);
       this.setUnselected();
       this.setNewIndex();
     },
@@ -55,7 +24,14 @@ export const useAppStore = defineStore("app", {
       this.isSelected = false;
     },
     clear() {
-      this.score = [];
+      this.progress.clear();
+    },
+    setKanjiProgress(incomingKanji: string, result: number) {
+      const kanjiFromSet = this.progress.get(incomingKanji);
+      this.progress.set(incomingKanji, {
+        count: (kanjiFromSet?.count || 0) + 1,
+        result: [...(kanjiFromSet?.result || []), result],
+      });
     },
   },
   getters: {
@@ -66,16 +42,57 @@ export const useAppStore = defineStore("app", {
         )
       );
     },
-    scoreValue(): number {
-      return (
-        Math.ceil(this.score.reduce((a, b) => a + b, 0) / this.score.length) ||
-        0
-      );
-    },
     kanji(): IKanji | undefined {
+      if (
+        this.currentIndex % getRandomArbitrary(1, 8) === 0 &&
+        this.mostProblematicKanji
+      ) {
+        return this.mostProblematicKanji;
+      }
       const kanjiIndex = this.filteredIndexes.at(this.currentIndex);
-      if (kanjiIndex) return this.kanjiList.at(kanjiIndex);
-      return kanjiIndex as undefined;
+      return kanjiIndex !== undefined
+        ? this.kanjiList.at(kanjiIndex)
+        : kanjiIndex;
+    },
+    mostProblematicKanji(): IKanji | undefined {
+      const kanjiList = this.filteredIndexes
+        .map((el) => this.kanjiList[el])
+        .filter((el) => {
+          const isSelectedLevel = this.menu.selectedLevels.find(
+            (lev) => lev === +el.level
+          );
+          const progressResult = this.progress.get(el.kanji);
+          return isSelectedLevel && progressResult && progressResult.count > 0;
+        })
+        .map((el) => {
+          const kanji = this.progress.get(el.kanji);
+          const progressResult = Math.ceil(
+            kanji!.result.reduce((a, b) => a + b, 0) / kanji!.count
+          );
+          return {
+            ...el,
+            progressResult,
+          };
+        });
+      kanjiList.sort((a, b) => a.progressResult - b.progressResult);
+      const foundKanji = kanjiList.at(0);
+      if ((foundKanji?.progressResult || 0) <= 75) {
+        return foundKanji;
+      }
+    },
+    kanjiProgressColor(): string {
+      const kanji = this.progress.get(this.kanji?.kanji || "");
+      const progressValue = kanji
+        ? Math.ceil(kanji.result.reduce((a, b) => a + b, 0) / kanji.count)
+        : 0;
+      if (progressValue === 100) return this.gradesList.at(-1)?.name || "";
+      return (
+        this.gradesList.find(
+          (el, index) =>
+            el.value < progressValue &&
+            (this.gradesList.at(index + 1)?.value || 0) >= progressValue
+        )?.name || ""
+      );
     },
   },
 });

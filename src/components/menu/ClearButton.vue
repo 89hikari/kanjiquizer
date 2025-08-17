@@ -6,9 +6,8 @@ const store = useAppStore();
 
 <template>
   <div class="ml-auto text-h5 font-weight-bold d-flex align-center">
-    <p>{{ store.scoreValue }}%</p>
-    <v-icon class="cursor-pointer" @click="store.clear()"
-      >mdi-close-octagon-outline</v-icon
+    <v-btn size="small" variant="outlined" @click="store.clear"
+      >Clear progress</v-btn
     >
   </div>
 </template>

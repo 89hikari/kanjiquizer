@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import CrearButton from "../../components/menu/ClearButton.vue";
 import TheDialog from "../../components/menu/TheDialog.vue";
-import TheResult from "../../components/menu/TheResult.vue";
 </script>
 
 <template>
   <div class="d-flex justify-content-between">
     <TheDialog />
-    <TheResult />
+    <CrearButton />
   </div>
 </template>
 
