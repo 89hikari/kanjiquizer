@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { getInitialStore } from "../common/helpers/store.helper";
 
-import { getRandomArbitrary } from "../common/helpers/random.helper";
+import {
+  getAverageValue,
+  getRandomArbitrary,
+} from "../common/helpers/math.helper";
 import type { IKanji } from "../common/types";
 
 export const useAppStore = defineStore("app", {
@@ -66,12 +69,9 @@ export const useAppStore = defineStore("app", {
         })
         .map((el) => {
           const kanji = this.progress.get(el.kanji);
-          const progressResult = Math.ceil(
-            kanji!.result.reduce((a, b) => a + b, 0) / kanji!.count
-          );
           return {
             ...el,
-            progressResult,
+            progressResult: getAverageValue(kanji!.result, kanji!.count),
           };
         });
       kanjiList.sort((a, b) => a.progressResult - b.progressResult);
@@ -83,7 +83,7 @@ export const useAppStore = defineStore("app", {
     kanjiProgressColor(): string {
       const kanji = this.progress.get(this.kanji?.kanji || "");
       const progressValue = kanji
-        ? Math.ceil(kanji.result.reduce((a, b) => a + b, 0) / kanji.count)
+        ? getAverageValue(kanji.result, kanji.count)
         : 0;
       if (progressValue === 100) return this.gradesList.at(-1)?.name || "";
       return (
