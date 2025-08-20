@@ -19,7 +19,7 @@ const getColor = (kanji: string) => store.kanjiTableAdded.get(kanji);
     <template #default="{ items }">
       <div class="d-flex flex-wrap ga-3">
         <div
-          class="kanji border text-h4 pa-2 bg-white cursor-pointer"
+          class="kanji border text-h3 pa-2 bg-white cursor-pointer"
           :class="`bg-${getColor(kanji.raw.kanji)}`"
           v-for="kanji in items"
           :key="kanji.raw.kanji"
@@ -63,6 +63,7 @@ const getColor = (kanji: string) => store.kanjiTableAdded.get(kanji);
           v-model="page"
           :length="pageCount"
           :total-visible="4"
+          size="x-small"
           rounded="circle"
         />
       </div>
