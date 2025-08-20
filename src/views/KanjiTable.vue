@@ -7,8 +7,7 @@ const store = useAppStore();
 const page = ref(1);
 const pageCount = computed(() => Math.ceil(store.kanjiList.length / 100));
 
-const getIsAdded = (kanji: string) =>
-  store.kanjiTableAdded.indexOf(kanji) !== -1;
+const getColor = (kanji: string) => store.kanjiTableAdded.get(kanji);
 </script>
 
 <template>
@@ -20,18 +19,41 @@ const getIsAdded = (kanji: string) =>
     <template #default="{ items }">
       <div class="d-flex flex-wrap ga-3">
         <div
-          class="kanji border text-h4 bg-white cursor-pointer"
+          class="kanji border text-h4 pa-2 bg-white cursor-pointer"
+          :class="`bg-${getColor(kanji.raw.kanji)}`"
           v-for="kanji in items"
           :key="kanji.raw.kanji"
-          @dblclick="store.kanjiTableToggleKanji(kanji.raw.kanji)"
         >
-          <div
-            :class="{ 'bg-green': getIsAdded(kanji.raw.kanji) }"
-            class="pa-2"
+          <v-tooltip
+            :open-on-hover="false"
+            open-on-click
+            location="bottom"
+            max-width="250"
+            target="cursor"
+            interactive
+            close-on-content-click
+            offset="25"
           >
-            <p>{{ kanji.raw.kanji }}</p>
-            <span class="kanji-level">N{{ kanji.raw.level }}</span>
-          </div>
+            <template v-slot:activator="{ props }">
+              <div v-bind="props">
+                <p>{{ kanji.raw.kanji }}</p>
+                <span class="kanji-level">N{{ kanji.raw.level }}</span>
+              </div>
+            </template>
+            <div>
+              <p>{{ kanji.raw.kanji }}</p>
+              <p>On: {{ kanji.raw.on }}</p>
+              <p>Kun: {{ kanji.raw.kun }}</p>
+              <div class="d-flex justify-content-between ga-2 my-2">
+                <v-btn
+                  v-for="el in store.kanjiTableColorsList"
+                  :color="el"
+                  @click="store.kanjiTableToggleKanji(kanji.raw.kanji, el)"
+                  size="small"
+                ></v-btn>
+              </div>
+            </div>
+          </v-tooltip>
         </div>
       </div>
     </template>
@@ -51,6 +73,7 @@ const getIsAdded = (kanji: string) =>
 <style lang="scss" scoped>
 .kanji {
   position: relative;
+  user-select: none;
   &-level {
     position: absolute;
     font-size: 8px;

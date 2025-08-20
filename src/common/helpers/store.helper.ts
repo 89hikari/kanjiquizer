@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@vueuse/core";
-import { GRADES_LIST, KANJI_LIST } from "../const";
+import { GRADES_LIST, KANJI_LIST, TABLE_COLORS_LIST } from "../const";
 
 import type { KanjiProgress } from "../types";
 
@@ -9,6 +9,7 @@ export const getInitialStore = () => {
     indexList: [] as number[],
     currentIndex: 0,
     gradesList: GRADES_LIST,
+    kanjiTableColorsList: TABLE_COLORS_LIST,
     isSelected: false,
     menu: {
       opened: false,
@@ -29,7 +30,10 @@ export const getInitialStore = () => {
       },
     },
     progress: useLocalStorage("progress", new Map<string, KanjiProgress>()),
-    kanjiTableAdded: useLocalStorage("kanji-table-added", [] as string[]),
+    kanjiTableAdded: useLocalStorage(
+      "kanji-table-added",
+      new Map<string, string>()
+    ),
   };
 
   initialState.indexList = [

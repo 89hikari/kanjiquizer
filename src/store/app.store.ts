@@ -34,13 +34,8 @@ export const useAppStore = defineStore("app", {
     clear() {
       this.progress.clear();
     },
-    kanjiTableToggleKanji(value: string) {
-      const kanjiIndex = this.kanjiTableAdded.indexOf(value);
-      if (kanjiIndex === -1) {
-        this.kanjiTableAdded.push(value);
-        return;
-      }
-      this.kanjiTableAdded.splice(kanjiIndex, 1);
+    kanjiTableToggleKanji(kanji: string, value: string) {
+      this.kanjiTableAdded.set(kanji, value);
     },
   },
   getters: {

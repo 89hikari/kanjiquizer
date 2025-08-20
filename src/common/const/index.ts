@@ -17113,3 +17113,5 @@ export const GRADES_LIST = [
     value: 100,
   },
 ];
+
+export const TABLE_COLORS_LIST = ["E", "C", "B"];
