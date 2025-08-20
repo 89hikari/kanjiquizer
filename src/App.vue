@@ -1,14 +1,23 @@
 <script setup lang="ts">
-import TheMenu from "./modules/menu/TheMenu.vue";
-import ThePage from "./modules/page/ThePage.vue";
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
+const currentTab = ref(route.path);
+const routes = router.getRoutes();
 </script>
 
 <template>
   <v-app>
+    <v-app-bar app color="primary" dark>
+      <v-tabs v-model="currentTab" align-tabs="center" size>
+        <v-tab v-for="el in routes" :to="el.path" replace>{{ el.name }}</v-tab>
+      </v-tabs>
+    </v-app-bar>
     <v-main>
-      <v-container class="h-100">
-        <TheMenu />
-        <ThePage />
+      <v-container>
+        <router-view />
       </v-container>
     </v-main>
   </v-app>
