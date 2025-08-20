@@ -45,7 +45,7 @@ const pageCount = computed(() => Math.ceil(store.kanjiList.length / 100));
     </template>
     <template #footer>
       <div class="d-flex justify-center pa-4">
-        <v-pagination v-model="page" :length="pageCount" rounded="circle" />
+        <v-pagination v-model="page" :length="pageCount" :total-visible="4" rounded="circle" />
       </div>
     </template>
   </v-data-iterator>
