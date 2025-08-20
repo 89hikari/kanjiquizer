@@ -29,6 +29,7 @@ export const getInitialStore = () => {
       },
     },
     progress: useLocalStorage("progress", new Map<string, KanjiProgress>()),
+    kanjiTableAdded: useLocalStorage("kanji-table-added", [] as string[]),
   };
 
   initialState.indexList = [
