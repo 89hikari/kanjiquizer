@@ -4,7 +4,7 @@ import { useAppStore } from "../store/app.store";
 
 const store = useAppStore();
 const pageCount = computed(() =>
-  Math.ceil(store.kanjiTableFiltered.length / 100)
+  Math.ceil(store.kanjiTableFiltered.length / 105)
 );
 
 const getColor = (kanji: string) => store.kanjiTable.map.get(kanji);
@@ -25,13 +25,13 @@ const getColor = (kanji: string) => store.kanjiTable.map.get(kanji);
   </div>
   <v-data-iterator
     :items="store.kanjiTableFiltered"
-    :items-per-page="100"
+    :items-per-page="105"
     v-model:page="store.kanjiTable.page"
   >
     <template #default="{ items }">
-      <div class="d-flex flex-wrap ga-3">
+      <div class="d-flex flex-wrap ga-1">
         <div
-          class="kanji border text-h3 pa-2 bg-white cursor-pointer"
+          class="kanji border text-h4 pa-2 bg-white cursor-pointer"
           :class="`bg-${getColor(kanji.raw.kanji)}`"
           v-for="kanji in items"
           :key="kanji.raw.kanji"
@@ -74,9 +74,8 @@ const getColor = (kanji: string) => store.kanjiTable.map.get(kanji);
         <v-pagination
           v-model="store.kanjiTable.page"
           :length="pageCount"
-          :total-visible="4"
+          :total-visible="3"
           size="x-small"
-          rounded="circle"
         />
       </div>
     </template>

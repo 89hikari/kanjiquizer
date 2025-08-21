@@ -14,6 +14,10 @@ import { createPinia } from "pinia";
 // Router
 import router from "./router";
 
+import { registerSW } from "virtual:pwa-register";
+
+registerSW({ immediate: true });
+
 const app = createApp(App);
 app.use(createPinia());
 app.use(vuetify);
