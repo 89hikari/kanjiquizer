@@ -1,20 +1,32 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useAppStore } from "../store/app.store";
 
 const store = useAppStore();
+const pageCount = computed(() =>
+  Math.ceil(store.kanjiTableFiltered.length / 100)
+);
 
-const page = ref(1);
-const pageCount = computed(() => Math.ceil(store.kanjiList.length / 100));
-
-const getColor = (kanji: string) => store.kanjiTableAdded.get(kanji);
+const getColor = (kanji: string) => store.kanjiTable.map.get(kanji);
 </script>
 
 <template>
+  <div class="d-flex justify-content-between ga-2 mt-2 mb-5">
+    <v-btn
+      v-for="el in store.kanjiTable.colorsList"
+      :color="el"
+      :class="{
+        'border-md border-primary border-opacity-100':
+          el === store.kanjiTable.filter,
+      }"
+      @click="store.kanjiTableSetFilter(el)"
+      size="small"
+    ></v-btn>
+  </div>
   <v-data-iterator
-    :items="store.kanjiList"
+    :items="store.kanjiTableFiltered"
     :items-per-page="100"
-    v-model:page="page"
+    v-model:page="store.kanjiTable.page"
   >
     <template #default="{ items }">
       <div class="d-flex flex-wrap ga-3">
@@ -46,7 +58,7 @@ const getColor = (kanji: string) => store.kanjiTableAdded.get(kanji);
               <p>Kun: {{ kanji.raw.kun }}</p>
               <div class="d-flex justify-content-between ga-2 my-2">
                 <v-btn
-                  v-for="el in store.kanjiTableColorsList"
+                  v-for="el in store.kanjiTable.colorsList"
                   :color="el"
                   @click="store.kanjiTableToggleKanji(kanji.raw.kanji, el)"
                   size="small"
@@ -60,7 +72,7 @@ const getColor = (kanji: string) => store.kanjiTableAdded.get(kanji);
     <template #footer>
       <div class="d-flex justify-center pa-4">
         <v-pagination
-          v-model="page"
+          v-model="store.kanjiTable.page"
           :length="pageCount"
           :total-visible="4"
           size="x-small"

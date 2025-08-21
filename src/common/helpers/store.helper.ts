@@ -9,7 +9,6 @@ export const getInitialStore = () => {
     indexList: [] as number[],
     currentIndex: 0,
     gradesList: GRADES_LIST,
-    kanjiTableColorsList: TABLE_COLORS_LIST,
     isSelected: false,
     menu: {
       opened: false,
@@ -30,10 +29,12 @@ export const getInitialStore = () => {
       },
     },
     progress: useLocalStorage("progress", new Map<string, KanjiProgress>()),
-    kanjiTableAdded: useLocalStorage(
-      "kanji-table-added",
-      new Map<string, string>()
-    ),
+    kanjiTable: {
+      map: useLocalStorage("kanji-table-map", new Map<string, string>()),
+      page: useLocalStorage("kanji-table-page", 1),
+      colorsList: TABLE_COLORS_LIST,
+      filter: null as string | null,
+    },
   };
 
   initialState.indexList = [

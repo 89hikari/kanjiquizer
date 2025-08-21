@@ -35,7 +35,14 @@ export const useAppStore = defineStore("app", {
       this.progress.clear();
     },
     kanjiTableToggleKanji(kanji: string, value: string) {
-      this.kanjiTableAdded.set(kanji, value);
+      this.kanjiTable.map.set(kanji, value);
+    },
+    kanjiTableSetFilter(value: string) {
+      if (value === this.kanjiTable.filter) {
+        this.kanjiTable.filter = null;
+        return;
+      }
+      this.kanjiTable.filter = value;
     },
   },
   getters: {
@@ -94,6 +101,12 @@ export const useAppStore = defineStore("app", {
             (this.gradesList.at(index + 1)?.value || 0) >= progressValue
         )?.name || ""
       );
+    },
+    kanjiTableFiltered(store) {
+      return store.kanjiList.filter((el) => {
+        if (!store.kanjiTable.filter) return true;
+        return store.kanjiTable.map.get(el.kanji) === store.kanjiTable.filter;
+      });
     },
   },
 });
