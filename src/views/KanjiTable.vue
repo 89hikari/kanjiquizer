@@ -31,7 +31,7 @@ const getColor = (kanji: string) => store.kanjiTable.map.get(kanji);
     <template #default="{ items }">
       <div class="d-flex flex-wrap ga-1">
         <div
-          class="kanji border text-h4 pa-2 bg-white cursor-pointer"
+          class="kanji border text-h5 pa-2 bg-white cursor-pointer"
           :class="`bg-${getColor(kanji.raw.kanji)}`"
           v-for="kanji in items"
           :key="kanji.raw.kanji"
