@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 const currentTab = ref(route.path);
 const routes = router.getRoutes();
+
+watch(currentTab, () => !currentTab.value && router.push("/quizer"));
 </script>
 
 <template>
