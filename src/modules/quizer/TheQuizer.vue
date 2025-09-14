@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import TheCard from "../../components/page/TheCard.vue";
-import TheGrades from "../../components/page/TheGrades.vue";
-import TheMeaning from "../../components/page/TheMeaning.vue";
-import { useAppStore } from "../../store/app.store";
+import TheCard from "@/components/quizer/TheCard.vue";
+import TheGrades from "@/components/quizer/TheGrades.vue";
+import TheMeaning from "@/components/quizer/TheMeaning.vue";
+import { useAppStore } from "@/store/app.store";
 
 const store = useAppStore();
 </script>

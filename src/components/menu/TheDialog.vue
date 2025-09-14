@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAppStore } from "../../store/app.store";
+import { useAppStore } from "@/store/app.store";
 import TheLanguage from "./TheLanguage.vue";
 import TheLevels from "./TheLevels.vue";
 
